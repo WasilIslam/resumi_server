@@ -8,6 +8,8 @@ const {
   getContainerResumis,
   updateContainerResumi,
   getContainerResumi,
+  handleSignUp,
+  handleLogin
 } = require("../controllers/userController");
 const asyncMiddleware = require("../middleware/async");
 const {authToken} = require("../middleware/auth");
@@ -30,6 +32,29 @@ router.post(
     res.cookie(process.env.cookieToken, jwt).send("Cookies set!!");
   })
 );
+router.post(
+  "/signUp",
+  asyncMiddleware(async (req, res) => {
+    const {name, email, password} = req.body;
+    const jwt = await handleSignUp(name, email,password);
+    res.cookie(process.env.cookieToken, jwt).send("Cookies set!!");
+  })
+);
+router.post(
+  "/logIn",
+  asyncMiddleware(async (req, res) => {
+    const {email, password} = req.body;
+    const jwt = await handleLogin(email,password);
+    res.cookie(process.env.cookieToken, jwt).send("Cookies set!!");
+  })
+);
+router.post(
+  "/logOut",
+  asyncMiddleware(async (req, res) => {
+    res.clearCookie(process.env.cookieToken).send("Cookies cleared hehe");
+  })
+);
+
 router.post(
   "/saveResumi",
   authToken,

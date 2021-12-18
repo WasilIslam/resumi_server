@@ -3,9 +3,9 @@ const {getPayload} = require("../utils/googleAuth");
 const {getResumisMetaData, saveResumi, updateResumiData, getResumiIfEmailValid} = require("./resumiController");
 
 const getUserByEmail = async (email) => {
-        const user = await User.findOne({email});
-        if(!user)throw "$400 Email Not Found!"
-        return user;
+  const user = await User.findOne({email});
+  if (!user) throw "$400 Email Not Found!";
+  return user;
 };
 
 const getObservingResumis = async (email) => {
@@ -25,23 +25,22 @@ const observeResumi = async (email, resumiTitle) => {
   user.observing.resumis.push(resumiTitle);
   return await user.save();
 };
-const getContainerResumi = async(email,resumiTitle)=>{
-  return await getResumiIfEmailValid(email,resumiTitle);
-}
+const getContainerResumi = async (email, resumiTitle) => {
+  return await getResumiIfEmailValid(email, resumiTitle);
+};
 const saveContainerResumi = async (email, resumiTitle) => {
   const user = await getUserByEmail(email);
   const newResumiId = await saveResumi(email, resumiTitle);
   user.container.resumis.push(newResumiId);
   return await user.save();
 };
-const updateContainerResumi = async (email,resumiTitle, resumiData) => {
-  console.log(resumiTitle,resumiData);
-    if(await getResumiIfEmailValid(email,resumiTitle)){
-      const resumi=await updateResumiData(resumiTitle, resumiData);
-      return resumi;
-    }
-  };
-  
+const updateContainerResumi = async (email, resumiTitle, resumiData) => {
+  console.log(resumiTitle, resumiData);
+  if (await getResumiIfEmailValid(email, resumiTitle)) {
+    const resumi = await updateResumiData(resumiTitle, resumiData);
+    return resumi;
+  }
+};
 
 const handleGoogleLogin = async (token) => {
   //gets email, checks if in database(login) else create new id login
@@ -56,5 +55,28 @@ const handleGoogleLogin = async (token) => {
     return newUser.genAuthToken();
   }
 };
+const handleSignUp = async (name, email, password) => {
+  console.log("New User");
+  let newUser = new User({name, email, password});
+  newUser = await newUser.save();
+  return newUser.genAuthToken();
+};
+const handleLogin = async (email, password) => {
+  const oldUser = await User.findOne({email});
+  if (!oldUser) throw "Email Not found!";
+  if (oldUser.password !== password) throw "$400 Password not correct";
+  return oldUser.genAuthToken();
+};
 
-module.exports = {handleGoogleLogin,getContainerResumi, updateContainerResumi, getUserByEmail, saveContainerResumi, observeResumi, getContainerResumis, getObservingResumis};
+module.exports = {
+  handleSignUp,
+  handleLogin,
+  handleGoogleLogin,
+  getContainerResumi,
+  updateContainerResumi,
+  getUserByEmail,
+  saveContainerResumi,
+  observeResumi,
+  getContainerResumis,
+  getObservingResumis,
+};
