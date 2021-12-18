@@ -6,8 +6,8 @@ const getPayload=async (token)=>{
           idToken: token,
           audience: process.env.CLIENT_ID,
         });
+        console.log(token,ticket,process.env.CLIENT_ID);
         return ticket.getPayload();
-        res.send(user);
       } catch (err) {
           console.error(err);
         throw "$400 Error occured while logging in!"
