@@ -1,4 +1,4 @@
-const {Resumi} = require("../models/Resumi");
+const {Resumi} = require("../models/resumi");
 
 const saveResumi = async (ownerEmail, title) => {
   const resumi = new Resumi({ownerEmail,title, data: "<h1>Let's edit!</h1>"});
