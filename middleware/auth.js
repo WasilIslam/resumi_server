@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const {User} = require("../models/user");
 
 
 module.exports.encrypt = async (password) => {
@@ -11,18 +11,16 @@ module.exports.encrypt = async (password) => {
   return hash;
 };
 
-
 module.exports.authToken = function (req, res, next) {
-    //authenticates the x-auth-token, returns respective id
-  const token = req.header("x-auth-token");
-  console.log("token: ",token)
-  if (!token) throw("$400 Access denied! Token not found.");
-  try{
-      const decoded = jwt.verify(token, process.env.jwtKey);
-      req._id=decoded._id;
-      next();
-  }
-  catch(err){
-      throw("$400 Invalid token");
+  //authenticates the x-auth-token, returns respective id
+  const token = req.cookies[process.env.cookieToken];
+  console.log("Token: ", token);
+  if (!token) throw "$400 Access denied! Token not found.";
+  try {
+    const decoded = jwt.verify(token, process.env.jwtKey);
+    req.email = decoded.email;
+    next();
+  } catch (err) {
+    throw "$400 Invalid token";
   }
 };
