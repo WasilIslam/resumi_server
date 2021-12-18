@@ -23,7 +23,10 @@ router.post(
   "/googleLogin",
   asyncMiddleware(async (req, res) => {
     const {token} = req.body;
+    console.log("req token: ",token);
     const jwt = await handleGoogleLogin(token);
+    console.log("jwt: ",jwt);
+
     res.cookie(process.env.cookieToken, jwt).send("Cookies set!!");
   })
 );
