@@ -13,7 +13,7 @@ module.exports.encrypt = async (password) => {
 
 module.exports.authToken = function (req, res, next) {
   //authenticates the x-auth-token, returns respective id
-  const token = req.cookies[process.env.cookieToken];
+  const token = req.headers[process.env.cookieToken];
   console.log("Token: ", token);
   if (!token) throw "$400 Access denied! Token not found.";
   try {

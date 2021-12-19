@@ -45,7 +45,7 @@ router.post(
   asyncMiddleware(async (req, res) => {
     const {email, password} = req.body;
     const jwt = await handleLogin(email,password);
-    res.cookie(process.env.cookieToken, jwt).send("Cookies set!!");
+    res.cookie(process.env.cookieToken, jwt).send(jwt);
   })
 );
 router.post(

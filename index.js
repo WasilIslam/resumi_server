@@ -14,6 +14,6 @@ app.get("/", (req, res) => {
   res.send("Hello there i am working!!!");
 });
 
-app.listen(PORT || 5000, (err) => {
+app.listen(PORT, (err) => {
   if (!err) console.log("Listening to port " + PORT);
 });
